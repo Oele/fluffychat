@@ -8,6 +8,7 @@ import 'package:fluffychat/l10n/l10n.dart';
 import 'package:fluffychat/pages/sign_in/view_model/model/public_homeserver_data.dart';
 import 'package:fluffychat/utils/localized_exception_extension.dart';
 import 'package:fluffychat/utils/platform_infos.dart';
+import 'package:fluffychat/utils/sign_in_flows/homeserver_input_extension.dart';
 import 'package:fluffychat/utils/sign_in_flows/oidc_login.dart';
 import 'package:fluffychat/utils/sign_in_flows/sso_login.dart';
 import 'package:fluffychat/widgets/adaptive_dialogs/show_ok_cancel_alert_dialog.dart';
@@ -27,10 +28,7 @@ Future<void> connectToHomeserverFlow(
   setState(AsyncSnapshot.waiting());
   try {
     final homeserverInput = homeserverData.name!;
-    var homeserver = Uri.parse(homeserverInput);
-    if (homeserver.scheme.isEmpty) {
-      homeserver = Uri.https(homeserverInput, '');
-    }
+    final homeserver = Uri.parse(homeserverInput.withHttpsAsDefaultScheme);
     final l10n = L10n.of(context);
     final client = await Matrix.of(context).getLoginClient();
     final (_, _, loginFlows, authMetadata) = await client.checkHomeserver(
