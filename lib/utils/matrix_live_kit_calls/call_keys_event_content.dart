@@ -35,14 +35,14 @@ class CallKeysEventContent {
   final CallKeysEntry keys;
   final CallKeysMember member;
   final String roomId;
-  final CallKeysSession session;
+  final CallKeysSession? session;
   final int? sentTs;
 
   const CallKeysEventContent({
     required this.keys,
     required this.member,
     required this.roomId,
-    required this.session,
+    this.session,
     this.sentTs,
   });
 
@@ -55,9 +55,12 @@ class CallKeysEventContent {
           Map<String, Object?>.from(json['member'] as Map),
         ),
         roomId: json['room_id'] as String,
-        session: CallKeysSession.fromJson(
-          Map<String, Object?>.from(json['session'] as Map),
-        ),
+        session: switch (json['session']) {
+          final Map session => CallKeysSession.fromJson(
+            Map<String, Object?>.from(session),
+          ),
+          _ => null,
+        },
         sentTs: json['sent_ts'] as int?,
       );
 
@@ -65,7 +68,7 @@ class CallKeysEventContent {
     'keys': keys.toJson(),
     'member': member.toJson(),
     'room_id': roomId,
-    'session': session.toJson(),
+    'session': ?session?.toJson(),
     if (sentTs != null) 'sent_ts': sentTs,
   };
 }

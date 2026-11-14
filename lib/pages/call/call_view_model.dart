@@ -77,8 +77,9 @@ class CallViewModel extends ValueNotifier<CallViewModelState> {
       return;
     }
     final knownCallId = room.ownMatrixRtcMembership?.callId;
+    final callId = callKeys.session?.callId;
     if (callKeys.roomId != room.id ||
-        (knownCallId != null && callKeys.session.callId != knownCallId)) {
+        (knownCallId != null && callId != null && callId != knownCallId)) {
       Logs().d('Received call key for wrong group call.');
       return;
     }
